@@ -56,10 +56,11 @@ def main():
 
     L.compute('peratom', 'all', 'pe/atom') # Set a compute to track the peratom energy
     L.compute('csym', 'all', 'centro/atom', 'bcc') # Set a compute to track the centrosymmetry parameters
+    L.compute('stress', 'all', 'stress/atom', 'NULL') # Calculate stress as well
 
     L.minimize(ENERGY_TOL, FORCE_TOL, 1000, 10000) # Execute minimization
 
-    L.write_dump('all', 'custom', dump_filepath, 'id', 'x', 'y', 'z', 'c_peratom', 'c_csym') # Write a dumpfile containing atom positions, pot energies and centrosymmetry param
+    L.write_dump('all', 'custom', dump_filepath, 'id', 'x', 'y', 'z', 'c_peratom', 'c_csym', 'c_stress[1]') # Write a dumpfile containing atom positions and pot energies
     L.write_data(output_filepath) # Write a lammps input file with minimized configuration for subsequent sims
 
     L.close()
