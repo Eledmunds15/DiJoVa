@@ -4,8 +4,8 @@
 02_minimize_dislo/min_dump
 02_minimize_dislo/min_input
 
-04_jog_minimize_scheme/min_dump
-04_jog_minimize_scheme/min_input
+04_jog_creation/min_dump
+04_jog_creation/min_input
 
 # Ignore all log.lammps files
 *.lammps
