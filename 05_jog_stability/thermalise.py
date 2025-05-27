@@ -17,7 +17,7 @@ POTENTIAL_FILE = 'malerba.fs'
 TEMPERATURE = 700
 
 DIS_CORE_RADIUS = 25
-FIXED_REGION_LENGTH = 10
+FIXED_REGION_LENGTH = 5
 
 DT = 0.001
 DUMP_FREQ = 1000
@@ -25,7 +25,7 @@ RUN_TIME = 100000
 
 # --------------------------- MINIMIZATION ---------------------------#
 
-def main(atoms_to_delete):
+def main():
 
     #--- INITIALISE MPI ---#
     comm = MPI.COMM_WORLD
@@ -72,10 +72,11 @@ def main(atoms_to_delete):
     ymid = (ymin+ymax)/2
 
     cyl_radius = min([((xmax-xmin)/2), (ymax-ymin)/2])
+    mobile_atoms_radius = cyl_radius-FIXED_REGION_LENGTH
 
     #--- DEFINE REGIONS ---#
     L.region('dis_region', 'cylinder', 'z', xmid, ymid, DIS_CORE_RADIUS, 'INF', 'INF')
-    L.region('mobile_region', 'cylinder', 'z', xmid, ymid, cyl_radius, 'INF', 'INF')
+    L.region('mobile_region', 'cylinder', 'z', xmid, ymid, mobile_atoms_radius, 'INF', 'INF')
 
     #--- GROUP ATOMS ---#
     L.group('fe_atoms', 'type', 1) # Group all atoms
@@ -93,7 +94,7 @@ def main(atoms_to_delete):
 
     L.velocity('mobile', 'create', TEMPERATURE, 43123, 'mom', 'yes', 'rot', 'yes')
 
-    L.set('fixed', 'velocity', 0.0, 0.0, 0.0)
+    L.velocity('fixed', 'set', 0.0, 0.0, 0.0)
 
     #--- DEFINE THERMO ---#
 
@@ -101,7 +102,7 @@ def main(atoms_to_delete):
     L.thermo(1000)
 
     #--- DEFINE DUMP ---#
-    L.dump('1', 'dis_region', 'custom', DUMP_FREQ, dump_filepath, 'id', 'x', 'y', 'z', 'c_peratom', 'c_stress[4]')
+    L.dump('1', 'dis_core', 'custom', DUMP_FREQ, dump_filepath, 'id', 'x', 'y', 'z', 'c_peratom', 'c_csym')
 
     L.run(RUN_TIME)
 
