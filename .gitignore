@@ -6,3 +6,6 @@
 
 # Ignore all log.lammps files
 *.lammps
+
+# Ignore other stuff
+deleted_ids.txt
