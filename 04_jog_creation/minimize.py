@@ -10,7 +10,7 @@ INPUT_FILE = 'straight_edge_dislo.lmp'
 
 DISLO_CORE_IDS_DIR = '../03_dislo_analysis'
 DISLO_CORE_IDS_FILE = 'deleted_ids.txt'
-ATOMS_TO_DELETE = 1
+ATOMS_TO_DELETE = [1, 60] # Takes a list of integer values which determine the number of atoms it will delete.
 
 DUMP_DIR = 'min_dump'
 OUTPUT_DIR = 'min_input'
@@ -29,6 +29,8 @@ def main(atoms_to_delete):
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     size = comm.Get_size()
+
+    if rank == 0: print(f"Minimizing structure after deletion of {i} atoms")
 
     #--- Create and set directories ---#
 
@@ -113,11 +115,6 @@ def initialize_directories():
     os.makedirs(DUMP_DIR, exist_ok=True) # Create the dump directory
     os.makedirs(OUTPUT_DIR, exist_ok=True) # Create the output directory
 
-    clear_dir(DUMP_DIR) # Clear dump directory of previous data
-    clear_dir(OUTPUT_DIR) # Clear output_director of previous data
-
-    print("Directories successfully initialized...")
-
 def get_dislo_core_ids(filepath, n=None):
     """
     Reads atom IDs from a text file, preserving their order, 
@@ -155,5 +152,8 @@ if __name__ == "__main__":
 
     initialize_directories()
 
-    main(ATOMS_TO_DELETE)
-    main(ATOMS_TO_DELETE)
+    if len(ATOMS_TO_DELETE) < 1:
+        raise ValueError("ATOMS_TO_DELETE is empty. Please add parameters")
+
+    for i in ATOMS_TO_DELETE:
+        main(i)
