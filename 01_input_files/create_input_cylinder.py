@@ -37,12 +37,6 @@ def main():
 
     Fe_edge = BCCEdge111Dislocation(alat, C11, C12, C44, symbol="Fe") # Create dislocation object
 
-    print("Cell orientation:")
-    print(Fe_edge.axes)
-
-    print("Burgers vector:")
-    print(Fe_edge.burgers)
-
     edge_bulk, edge_dislo = Fe_edge.build_cylinder(radius=DISLO_CYL_RADIUS) # Create a single plane of cylinder around the dislocation
 
     edge_dislo_long = edge_dislo.repeat((1,1,DISLO_LEN)) # Replicate the cylinder along the dislocation axis (z)
