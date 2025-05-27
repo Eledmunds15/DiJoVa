@@ -13,7 +13,7 @@
 *.lammps
 
 # Ignore other stuff
-deleted_ids.txt
+selected_ids.txt
 
 # Ignore Jupyter notebook checkpoints
 .ipynb_checkpoints/
