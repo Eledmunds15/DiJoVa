@@ -9,8 +9,8 @@ INPUT_DIR = '../02_minimize_dislo/min_input'
 INPUT_FILE = 'straight_edge_dislo.lmp'
 
 DISLO_CORE_IDS_DIR = '../03_dislo_analysis'
-DISLO_CORE_IDS_FILE = 'deleted_ids.txt'
-ATOMS_TO_DELETE = [1] # Takes a list of integer values which determine the number of atoms it will delete.
+DISLO_CORE_IDS_FILE = 'selected_ids.txt'
+ATOMS_TO_DELETE = [1, 30] # Takes a list of integer values which determine the number of atoms it will delete.
 
 DUMP_DIR = 'min_dump'
 OUTPUT_DIR = 'min_input'
@@ -18,7 +18,7 @@ OUTPUT_DIR = 'min_input'
 POTENTIAL_DIR = '../00_potentials'
 POTENTIAL_FILE = 'malerba.fs'
 
-ENERGY_TOL = 1e-8
+ENERGY_TOL = 1e-9
 FORCE_TOL = 1e-10
 
 # --------------------------- MINIMIZATION ---------------------------#
@@ -69,12 +69,10 @@ def main(atoms_to_delete):
     L.delete_atoms('group', 'del_atoms')
 
     L.compute('peratom', 'all', 'pe/atom') # Set a compute to track the peratom energy
-    L.compute('csym', 'all', 'centro/atom', 'bcc')
-    L.compute('stress', 'all', 'stress/atom', 'NULL')
 
     L.minimize(ENERGY_TOL, FORCE_TOL, 1000, 10000) # Execute minimization
 
-    L.write_dump('all', 'custom', dump_filepath, 'id', 'x', 'y', 'z', 'c_peratom', 'c_csym', 'c_stress[1]') # Write a dumpfile containing atom positions and pot energies
+    L.write_dump('all', 'custom', dump_filepath, 'id', 'x', 'y', 'z', 'c_peratom') # Write a dumpfile containing atom positions and pot energies
     L.write_data(output_filepath) # Write a lammps input file with minimized configuration for subsequent sims
 
     L.close()
