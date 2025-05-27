@@ -14,7 +14,7 @@ OUTPUT_DIR = 'min_input'
 POTENTIAL_DIR = '../00_potentials'
 POTENTIAL_FILE = 'malerba.fs'
 
-ENERGY_TOL = 1e-6
+ENERGY_TOL = 1e-7
 FORCE_TOL = 1e-10
 
 # --------------------------- MINIMIZATION ---------------------------#

@@ -10,7 +10,7 @@ INPUT_FILE = 'straight_edge_dislo.lmp'
 
 DISLO_CORE_IDS_DIR = '../03_dislo_analysis'
 DISLO_CORE_IDS_FILE = 'deleted_ids.txt'
-ATOMS_TO_DELETE = 10
+ATOMS_TO_DELETE = 1
 
 DUMP_DIR = 'min_dump'
 OUTPUT_DIR = 'min_input'
@@ -18,7 +18,7 @@ OUTPUT_DIR = 'min_input'
 POTENTIAL_DIR = '../00_potentials'
 POTENTIAL_FILE = 'malerba.fs'
 
-ENERGY_TOL = 1e-6
+ENERGY_TOL = 1e-8
 FORCE_TOL = 1e-10
 
 # --------------------------- MINIMIZATION ---------------------------#
@@ -155,4 +155,5 @@ if __name__ == "__main__":
 
     initialize_directories()
 
+    main(ATOMS_TO_DELETE)
     main(ATOMS_TO_DELETE)

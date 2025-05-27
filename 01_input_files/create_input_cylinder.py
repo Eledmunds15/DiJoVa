@@ -17,7 +17,7 @@ POTENTIAL_DIR = '../00_potentials'
 POTENTIAL_FILE = 'malerba.fs'
 
 DISLO_CYL_RADIUS = 150 # Radius of the cylinder around the dislocation (Angstroms)
-DISLO_LEN = 20 # Length of the dislocation (number of planes)
+DISLO_LEN = 40 # Length of the dislocation (number of planes)
 
 # --------------------------- MAIN SCRIPT ---------------------------#
 
