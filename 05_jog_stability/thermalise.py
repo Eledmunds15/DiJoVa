@@ -111,7 +111,7 @@ def main():
     L.thermo(1000)
 
     #--- DEFINE DUMP ---#
-    L.dump('1', 'dis_core', 'custom', DUMP_FREQ, dump_filepath, 'id', 'x', 'y', 'z', 'c_peratom', 'c_csym')
+    L.dump('1', 'mobile', 'custom', DUMP_FREQ, dump_filepath, 'id', 'x', 'y', 'z', 'c_peratom', 'c_csym')
 
     L.run(RUN_TIME)
 
