@@ -13,7 +13,7 @@ from utilities import set_path, clear_dir
 INPUT_DIR = '../05_jog_stability/dump_files_TEST'
 INPUT_FILE = 'dumpfile_*'
 
-OUTPUT_DIR = 'processed_files_TEST'
+OUTPUT_DIR = 'time_averaged_files'
 
 AVERAGE_WINDOW = 5
 
