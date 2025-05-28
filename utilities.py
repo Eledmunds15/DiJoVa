@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 import shutil
 
 def set_path():
@@ -68,20 +69,3 @@ def clear_dir(dir_path):
                 shutil.rmtree(entry_path)  # Remove directory and all contents
         except Exception as e:
             print(f"[ERROR] Failed to delete '{entry_path}'. Reason: {e}")
-
-def get_filenames(dir_path):
-    """Returns a sorted list of file names (not paths) in the given directory."""
-    return sorted([
-        f for f in os.listdir(dir_path)
-        if os.path.isfile(os.path.join(dir_path, f))
-    ])
-
-def split_files(file_list, rank, size):
-
-    files = []
-
-    for i, dump_file in enumerate(file_list):
-        if i % size == rank:
-            files.append(dump_file)
-            
-    return files
