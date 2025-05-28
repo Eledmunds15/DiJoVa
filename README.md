@@ -76,7 +76,7 @@ DiJoVa/
 ├── 05_jog_stability/
 ├── 06_dynamics_analysis/
 ├── utilities.py
-├── __init__.py
+├── init.py
 └── README.md
 
 ## License
