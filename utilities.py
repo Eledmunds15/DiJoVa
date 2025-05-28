@@ -1,26 +1,23 @@
 import os
+import sys
 import shutil
 
 def set_path():
-
-    filepath = os.path.dirname(os.path.abspath(__file__))
-    os.chdir(filepath)
+    # This gets the file path of the script that was executed
+    script_path = os.path.abspath(sys.argv[0])
+    script_dir = os.path.dirname(script_path)
+    os.chdir(script_dir)
+    print(f"[DEBUG] Working directory set to: {script_dir}")
 
 def del_file(filepath):
-     
-    abs_path = os.path.abspath(filepath)
+    full_path = os.path.abspath(filepath)
+    print(f"[DEBUG] Checking for file: {full_path}")
     
-    if not os.path.exists(abs_path):
+    if not os.path.exists(full_path):
         raise FileNotFoundError(f"The file '{filepath}' does not exist.")
     
-    if not os.path.isfile(abs_path):
-        raise ValueError(f"The path '{filepath}' is not a file.")
-    
-    try:
-        os.remove(abs_path)
-        print(f"Deleted file: {abs_path}")
-    except Exception as e:
-        print(f"Failed to delete '{abs_path}'. Reason: {e}")
+    os.remove(full_path)
+    print(f"[INFO] Deleted file: {full_path}")
 
 def clear_dir(dir_path):
      
