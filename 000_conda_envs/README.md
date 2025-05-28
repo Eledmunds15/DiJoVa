@@ -1,4 +1,4 @@
-## Conda Environment Files
+# Conda Environment Files
 
 This project includes several Conda environment files tailored for different purposes:
 
@@ -6,7 +6,7 @@ This project includes several Conda environment files tailored for different pur
 - **02:** `lammps.yml` — Environment for LAMMPS simulations  
 - **03:** `matscipy.yml` — Environment for Matscipy tools  
 
-### Creating Conda Environments
+## Creating Conda Environments
 
 To create an environment, run:
 
@@ -21,7 +21,7 @@ Activate the environment with:
 ```bash
 conda activate <env_name>
 ```
-### Removing Conda Environments
+## Removing Conda Environments
 
 To remove an environment, run:
 ```bash
