@@ -7,7 +7,7 @@
 04_jog_creation/min_dump
 04_jog_creation/min_input
 
-05_jog_stability/dump_files
+05_jog_stability/dump_files*
 
 # Ignore all log.lammps files
 *.lammps
