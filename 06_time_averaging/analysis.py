@@ -1,5 +1,6 @@
 # --------------------------- LIBRARIES ---------------------------#
 import os
+import re
 from mpi4py import MPI
 
 from ovito.io import import_file, export_file
@@ -14,7 +15,7 @@ INPUT_FILE = 'dumpfile_*'
 
 OUTPUT_DIR = 'processed_files_TEST'
 
-SOMETHING = 5
+AVERAGE_WINDOW = 5
 
 # --------------------------- ANALYSIS ---------------------------#
 
@@ -42,29 +43,41 @@ def main():
     #--- BROADCAST AND DISTRIBUTE WORK ---#
     dump_files = comm.bcast(dump_files, root=0)
 
-    print(f"Rank {rank} of size {size} processing {dump_files[:3]}")
-    
+    # Each rank gets only its share of files to process
+    dump_index_rank = split_indexes(len(dump_files), rank, size)
+
+    print(f"Rank {rank} of size {size} processing {dump_index_rank}")
+
     comm.Barrier()
 
-    #--- PROCESS FILE ---#
+    #--- PROCESS FILES ---#
+    for index in dump_index_rank:
 
-    
-    
+        dump_chunk = dump_files[index:index+AVERAGE_WINDOW]
+        print(dump_chunk)
+
+        if len(dump_chunk) != AVERAGE_WINDOW:
+            print("Ran out of files!")
+            break
+
+        process_files(dump_chunk)
+        
     return None
 
 # --------------------------- UTILITIES ---------------------------#
 
-def process_files(dump_files):
+def process_files(dump_chunk):
 
-    output_path = os.path.join(OUTPUT_DIR, dump_files)
+    input_paths = [os.path.join(INPUT_DIR, dump_file) for dump_file in dump_chunk]
+    output_path = os.path.join(OUTPUT_DIR, dump_chunk[0])
 
     # Load the trajectory (make sure it's multiple frames!)
-    pipeline = import_file()
+    pipeline = import_file(input_paths)
 
     # Add the time-averaging modifier:
     pipeline.modifiers.append(
         TimeAveragingModifier(
-            operate_on = 'property:particles/c_csym',
+            operate_on = ('property:particles/c_csym', 'property:particles/c_peratom')
         )
     )
 
@@ -72,7 +85,7 @@ def process_files(dump_files):
     data = pipeline.compute(pipeline.source.num_frames - 1)
 
     export_file(data, output_path, "lammps/dump",
-                columns=["Particle Identifier", "Position.X", "Position.Y", "Position.Z", "c_peratom", "c_csym", "c_csym Average"])
+                columns=["Particle Identifier", "Position.X", "Position.Y", "Position.Z", "c_peratom", "c_peratom Average", "c_csym", "c_csym Average"])
 
 def view_information(data):
     
@@ -95,15 +108,19 @@ def natural_sort_key(s):
     # Split the string into digit and non-digit parts, convert digits to int
     return [int(text) if text.isdigit() else text.lower() for text in re.split(r'(\d+)', s)]
 
-def split_files(file_list, rank, size):
+def split_indexes(n_files, rank, size):
+    """Split n_files into contiguous chunks of indexes for each rank."""
+    chunk_size = n_files // size
+    remainder = n_files % size
 
-    files = []
+    if rank < remainder:
+        start = rank * (chunk_size + 1)
+        end = start + chunk_size + 1
+    else:
+        start = rank * chunk_size + remainder
+        end = start + chunk_size
 
-    for i, dump_file in enumerate(file_list):
-        if i % size == rank:
-            files.append(dump_file)
-            
-    return files
+    return list(range(start, end))
 
 # --------------------------- ENTRY POINT ---------------------------#
 
