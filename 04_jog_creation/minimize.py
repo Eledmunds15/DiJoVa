@@ -3,6 +3,8 @@ import os
 from mpi4py import MPI
 from lammps import lammps, PyLammps
 
+from utilities import set_path
+
 # --------------------------- CONFIG ---------------------------#
 
 INPUT_DIR = '../02_minimize_dislo/min_input'
@@ -10,7 +12,7 @@ INPUT_FILE = 'straight_edge_dislo.lmp'
 
 DISLO_CORE_IDS_DIR = '../03_dislo_analysis'
 DISLO_CORE_IDS_FILE = 'selected_ids.txt'
-ATOMS_TO_DELETE = [1, 2, 10] # Takes a list of integer values which determine the number of atoms it will delete.
+ATOMS_TO_DELETE = [1] # Takes a list of integer values which determine the number of atoms it will delete.
 
 DUMP_DIR = 'min_dump'
 OUTPUT_DIR = 'min_input'
@@ -30,7 +32,12 @@ def main(atoms_to_delete):
     rank = comm.Get_rank()
     size = comm.Get_size()
 
-    if rank == 0: print(f"Minimizing structure after deletion of {i} atoms")
+    set_path()
+
+    if rank == 0: 
+        print(f"Minimizing structure after deletion of {i} atoms")
+        os.makedirs(DUMP_DIR, exist_ok=True)
+        os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     #--- CREATE AND SET DIRECTORIES ---#
 
@@ -81,40 +88,6 @@ def main(atoms_to_delete):
 
 # --------------------------- UTILITIES ---------------------------#
 
-def set_path():
-
-    filepath = os.path.dirname(os.path.abspath(__file__))
-    os.chdir(filepath)
-    # print(f'Working directory set to: {filepath}')
-
-def clear_dir(dir_path):
-     
-    if not os.path.isdir(dir_path):
-        raise ValueError(f"The path '{dir_path}' is not a directory or does not exist.")
-    
-    for filename in os.listdir(dir_path):
-        file_path = os.path.join(dir_path, filename)
-        try:
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)  # remove file or symlink
-            elif os.path.isdir(file_path):
-                # Optional: if you want to delete subdirectories too
-                for root, dirs, files in os.walk(file_path, topdown=False):
-                    for f in files:
-                        os.unlink(os.path.join(root, f))
-                    for d in dirs:
-                        os.rmdir(os.path.join(root, d))
-                os.rmdir(file_path)
-        except Exception as e:
-            print(f"Failed to delete {file_path}. Reason: {e}")
-
-def initialize_directories():
-
-    set_path() # Set path to location of current directory
-
-    os.makedirs(DUMP_DIR, exist_ok=True) # Create the dump directory
-    os.makedirs(OUTPUT_DIR, exist_ok=True) # Create the output directory
-
 def get_dislo_core_ids(filepath, n=None):
     """
     Reads atom IDs from a text file, preserving their order, 
@@ -149,8 +122,6 @@ def get_dislo_core_ids(filepath, n=None):
 # --------------------------- ENTRY POINT ---------------------------#
 
 if __name__ == "__main__":
-
-    initialize_directories()
 
     if len(ATOMS_TO_DELETE) < 1:
         raise ValueError("ATOMS_TO_DELETE is empty. Please add parameters")
