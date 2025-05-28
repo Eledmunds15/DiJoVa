@@ -9,6 +9,8 @@ from matscipy.dislocation import BCCEdge111Dislocation
 
 from ase.io import write
 
+from utilities import set_path, del_file
+
 # --------------------------- CONFIG ---------------------------#
 
 OUTPUT_FILE = 'straight_edge_dislo.lmp'
@@ -46,30 +48,6 @@ def main():
     write(OUTPUT_FILE, edge_dislo_long, format="lammps-data", specorder=['Fe']) # Write the file out to lammps input file
 
     return None
-
-# --------------------------- UTILITIES ---------------------------#
-
-def set_path():
-
-    filepath = os.path.dirname(os.path.abspath(__file__))
-    os.chdir(filepath)
-    print(f'Working directory set to: {filepath}')
-
-def del_file(filepath):
-     
-    abs_path = os.path.abspath(filepath)
-    
-    if not os.path.exists(abs_path):
-        raise FileNotFoundError(f"The file '{filepath}' does not exist.")
-    
-    if not os.path.isfile(abs_path):
-        raise ValueError(f"The path '{filepath}' is not a file.")
-    
-    try:
-        os.remove(abs_path)
-        print(f"Deleted file: {abs_path}")
-    except Exception as e:
-        print(f"Failed to delete '{abs_path}'. Reason: {e}")
 
 # --------------------------- ENTRY POINT ---------------------------#
 
