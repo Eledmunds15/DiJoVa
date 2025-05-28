@@ -47,6 +47,10 @@ def main():
     
     comm.Barrier()
 
+    #--- VIEW INFORMATION ---#
+
+    if rank == 0: view_information(dump_files[0])
+
     #--- PROCESS FILE ---#
 
     for file in dump_files_rank:
@@ -67,20 +71,31 @@ def process_file(dump_file):
     # Add the time-averaging modifier:
     pipeline.modifiers.append(
         TimeAveragingModifier(
-            operate_on='property',      # Averaging per-particle properties
-            properties=['Position'],     # You can average any particle property
-            window=10                    # Number of frames in the averaging window
+            operate_on = 'property:particles/c_csym',
+            sampling_frequency = 5,
         )
     )
 
     # Evaluate at the last frame (you can change this)
     data = pipeline.compute(pipeline.source.num_frames - 1)
 
-    # Access the averaged data
-    avg_positions = data.particles['Position']
-    print(avg_positions[:5])  # Print first 5 for example
+def view_information(dump_file):
+     
+    input_path = os.path.join(INPUT_DIR, dump_file)
 
-    return avg_positions
+    pipeline = import_file(input_path)
+
+    data = pipeline.compute(pipeline.source.num_frames - 1)
+    
+    print('')
+    print("Available particle properties:")
+    for prop in data.particles.keys():
+        print(f"  - {prop}")
+
+    print("\nAvailable global attributes:")
+    for attr in data.attributes.keys():
+        print(f"  - {attr}")
+    print('')
 
 # --------------------------- ENTRY POINT ---------------------------#
 
