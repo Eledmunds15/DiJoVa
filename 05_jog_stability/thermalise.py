@@ -4,6 +4,8 @@ import numpy as np
 from mpi4py import MPI
 from lammps import lammps, PyLammps
 
+from utilities import set_path, clear_dir
+
 # --------------------------- CONFIG ---------------------------#
 
 INPUT_DIR = '../04_jog_creation/min_input'
@@ -21,7 +23,7 @@ FIXED_REGION_LENGTH = 10
 
 DT = 0.001
 DUMP_FREQ = 1000
-RUN_TIME = 100000
+RUN_TIME = 100
 
 # --------------------------- MINIMIZATION ---------------------------#
 
@@ -32,7 +34,13 @@ def main():
     rank = comm.Get_rank()
     size = comm.Get_size()
 
+    set_path()
+
     #--- CREATE AND SET DIRECTORIES ---#
+    if rank == 0: 
+        os.makedirs(DUMP_DIR, exist_ok=True)
+        clear_dir(DUMP_DIR)
+
     input_filepath = os.path.join(INPUT_DIR, INPUT_FILE)
 
     dump_file = f'dumpfile_*'
@@ -113,41 +121,6 @@ def main():
 
 # --------------------------- UTILITIES ---------------------------#
 
-def set_path():
-
-    filepath = os.path.dirname(os.path.abspath(__file__))
-    os.chdir(filepath)
-    # print(f'Working directory set to: {filepath}')
-
-def clear_dir(dir_path):
-     
-    if not os.path.isdir(dir_path):
-        raise ValueError(f"The path '{dir_path}' is not a directory or does not exist.")
-    
-    for filename in os.listdir(dir_path):
-        file_path = os.path.join(dir_path, filename)
-        try:
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)  # remove file or symlink
-            elif os.path.isdir(file_path):
-                # Optional: if you want to delete subdirectories too
-                for root, dirs, files in os.walk(file_path, topdown=False):
-                    for f in files:
-                        os.unlink(os.path.join(root, f))
-                    for d in dirs:
-                        os.rmdir(os.path.join(root, d))
-                os.rmdir(file_path)
-        except Exception as e:
-            print(f"Failed to delete {file_path}. Reason: {e}")
-
-def initialize_directories():
-
-    set_path() # Set path to location of current directory
-
-    os.makedirs(DUMP_DIR, exist_ok=True) # Create the dump directory
-
-    clear_dir(DUMP_DIR)
-
 def get_dislo_core_ids(filepath, n=None):
     """
     Reads atom IDs from a text file, preserving their order, 
@@ -182,7 +155,5 @@ def get_dislo_core_ids(filepath, n=None):
 # --------------------------- ENTRY POINT ---------------------------#
 
 if __name__ == "__main__":
-
-    initialize_directories()
 
     main()
