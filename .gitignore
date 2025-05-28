@@ -9,6 +9,8 @@
 
 05_jog_stability/dump_files*
 
+06_time_averaging/processed_files
+
 # Ignore all log.lammps files
 *.lammps
 
