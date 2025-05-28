@@ -10,7 +10,7 @@ from utilities import set_path, clear_dir
 
 # --------------------------- CONFIG ---------------------------#
 
-INPUT_DIR = '../05_jog_stability/dump_files_TEST'
+INPUT_DIR = '../05_jog_stability/dump_files'
 INPUT_FILE = 'dumpfile_*'
 
 OUTPUT_DIR = 'time_averaged_files'
@@ -54,13 +54,14 @@ def main():
     for index in dump_index_rank:
 
         dump_chunk = dump_files[index:index+AVERAGE_WINDOW]
-        print(dump_chunk)
+        # print(dump_chunk)
 
         if len(dump_chunk) != AVERAGE_WINDOW:
             print("Ran out of files!")
             break
 
         process_files(dump_chunk)
+        print(f"Successfully processe frame {index}...")
         
     return None
 

@@ -10,10 +10,10 @@ from utilities import set_path, clear_dir
 
 # --------------------------- CONFIG ---------------------------#
 
-INPUT_DIR = '../05_jog_stability/dump_files_TEST'
+INPUT_DIR = '../05_jog_stability/dump_files'
 INPUT_FILE = 'dumpfile_*'
 
-OUTPUT_LINES_DIR = 'DXA_files'
+OUTPUT_LINES_DIR = 'DXA_lines_files'
 OUTPUT_ATOMS_DIR = 'DXA_atoms_files'
 
 
