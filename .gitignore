@@ -15,5 +15,8 @@
 # Ignore other stuff
 selected_ids.txt
 
+# Ignore PyCaches
+__pycache__/
+
 # Ignore Jupyter notebook checkpoints
 .ipynb_checkpoints/
