@@ -14,10 +14,10 @@ DUMP_DIR = 'dump_files'
 POTENTIAL_DIR = '../00_potentials'
 POTENTIAL_FILE = 'malerba.fs'
 
-TEMPERATURE = 700
+TEMPERATURE = 600
 
 DIS_CORE_RADIUS = 25
-FIXED_REGION_LENGTH = 5
+FIXED_REGION_LENGTH = 10
 
 DT = 0.001
 DUMP_FREQ = 1000
@@ -94,6 +94,7 @@ def main():
 
     L.velocity('mobile', 'create', TEMPERATURE, 43123, 'mom', 'yes', 'rot', 'yes')
 
+    L.fix('boundary_freeze', 'fixed', 'setforce', 0.0, 0.0, 0.0)
     L.velocity('fixed', 'set', 0.0, 0.0, 0.0)
 
     #--- DEFINE THERMO ---#

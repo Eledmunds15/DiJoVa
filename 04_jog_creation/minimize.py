@@ -10,7 +10,7 @@ INPUT_FILE = 'straight_edge_dislo.lmp'
 
 DISLO_CORE_IDS_DIR = '../03_dislo_analysis'
 DISLO_CORE_IDS_FILE = 'selected_ids.txt'
-ATOMS_TO_DELETE = [1, 30] # Takes a list of integer values which determine the number of atoms it will delete.
+ATOMS_TO_DELETE = [1, 2, 10] # Takes a list of integer values which determine the number of atoms it will delete.
 
 DUMP_DIR = 'min_dump'
 OUTPUT_DIR = 'min_input'
