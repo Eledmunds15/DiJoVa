@@ -5,14 +5,14 @@ from mpi4py import MPI
 from ovito.io import import_file, export_file
 from ovito.modifiers import TimeAveragingModifier
 
-from utilities import set_path, clear_dir, get_filenames, split_files
+from utilities import set_path, clear_dir
 
 # --------------------------- CONFIG ---------------------------#
 
 INPUT_DIR = '../05_jog_stability/dump_files_TEST'
 INPUT_FILE = 'dumpfile_*'
 
-OUTPUT_DIR = 'processed_files'
+OUTPUT_DIR = 'processed_files_TEST'
 
 SOMETHING = 5
 
@@ -41,51 +41,40 @@ def main():
 
     #--- BROADCAST AND DISTRIBUTE WORK ---#
     dump_files = comm.bcast(dump_files, root=0)
-    dump_files_rank = split_files(dump_files, rank, size)
 
-    print(f"Rank {rank} of size {size} processing {dump_files_rank[:3]}")
+    print(f"Rank {rank} of size {size} processing {dump_files[:3]}")
     
     comm.Barrier()
 
-    #--- VIEW INFORMATION ---#
-
-    if rank == 0: view_information(dump_files[0])
-
     #--- PROCESS FILE ---#
 
-    for file in dump_files_rank:
-         process_file(file)
-
+    
+    
     return None
 
 # --------------------------- UTILITIES ---------------------------#
 
+def process_files(dump_files):
 
-def process_file(dump_file):
-    input_path = os.path.join(INPUT_DIR, dump_file)
-    output_path = os.path.join(OUTPUT_DIR, dump_file)
+    output_path = os.path.join(OUTPUT_DIR, dump_files)
 
     # Load the trajectory (make sure it's multiple frames!)
-    pipeline = import_file(input_path)
+    pipeline = import_file()
 
     # Add the time-averaging modifier:
     pipeline.modifiers.append(
         TimeAveragingModifier(
             operate_on = 'property:particles/c_csym',
-            sampling_frequency = 5,
         )
     )
 
     # Evaluate at the last frame (you can change this)
     data = pipeline.compute(pipeline.source.num_frames - 1)
 
-def view_information(dump_file):
-     
-    input_path = os.path.join(INPUT_DIR, dump_file)
+    export_file(data, output_path, "lammps/dump",
+                columns=["Particle Identifier", "Position.X", "Position.Y", "Position.Z", "c_peratom", "c_csym", "c_csym Average"])
 
-    pipeline = import_file(input_path)
-
-    data = pipeline.compute(pipeline.source.num_frames - 1)
+def view_information(data):
     
     print('')
     print("Available particle properties:")
@@ -96,6 +85,25 @@ def view_information(dump_file):
     for attr in data.attributes.keys():
         print(f"  - {attr}")
     print('')
+
+def get_filenames(dir_path):
+    """Returns a naturally sorted list of filenames (not paths) in the given directory."""
+    files = [f for f in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, f))]
+    return sorted(files, key=natural_sort_key)
+
+def natural_sort_key(s):
+    # Split the string into digit and non-digit parts, convert digits to int
+    return [int(text) if text.isdigit() else text.lower() for text in re.split(r'(\d+)', s)]
+
+def split_files(file_list, rank, size):
+
+    files = []
+
+    for i, dump_file in enumerate(file_list):
+        if i % size == rank:
+            files.append(dump_file)
+            
+    return files
 
 # --------------------------- ENTRY POINT ---------------------------#
 
