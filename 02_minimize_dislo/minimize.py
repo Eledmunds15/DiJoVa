@@ -3,7 +3,7 @@ import os
 from mpi4py import MPI
 from lammps import lammps, PyLammps
 
-from utilities import set_path
+from utilities import set_path, clear_dir
 
 # --------------------------- CONFIG ---------------------------#
 
@@ -80,5 +80,4 @@ def main():
 
 if __name__ == "__main__":
 
-        initialize_directories()
         main()
