@@ -12,21 +12,22 @@ To create an environment, run:
 
 ```bash
 conda env create -n <env_name> -f <file.yml>
-
+```
 Example:
-
+```bash
 conda env create -n analysis -f analysis.yml
-
+```
 Activate the environment with:
-
+```bash
 conda activate <env_name>
-
-Removing Conda Environments
+```
+### Removing Conda Environments
 
 To remove an environment, run:
-
+```bash
 conda env remove -n <env_name>
-
+```
 Example:
-
+```bash
 conda env remove -n analysis
+```
