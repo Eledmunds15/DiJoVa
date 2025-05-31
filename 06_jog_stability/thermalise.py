@@ -22,8 +22,8 @@ DIS_CORE_RADIUS = 25
 FIXED_REGION_LENGTH = 10
 
 DT = 0.001
-DUMP_FREQ = 1000
-RUN_TIME = 100
+DUMP_FREQ = 10
+RUN_TIME = 300
 
 # --------------------------- MINIMIZATION ---------------------------#
 
