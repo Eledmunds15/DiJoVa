@@ -13,13 +13,16 @@ from utilities import set_path, clear_dir
 
 # --------------------------- CONFIG ---------------------------#
 
-MASTER_DATA_DIR = '../000_output_files'
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..'))
+
+MASTER_DATA_DIR = '000_output_files'
 
 MODULE_DIR = '01_input_files'
 
 OUTPUT_FILE = 'straight_edge_dislo.lmp'
 
-POTENTIAL_DIR = '../00_potentials'
+POTENTIAL_DIR = '00_potentials'
 POTENTIAL_FILE = 'malerba.fs'
 
 DISLO_CYL_RADIUS = 100 # Radius of the cylinder around the dislocation (Angstroms)
@@ -29,7 +32,7 @@ DISLO_LEN = 10 # Length of the dislocation (number of planes)
 
 def main():
 
-    set_path() # Sets the path to the location of the current script
+    set_path(PROJECT_ROOT) # Sets the path to the location of the current script
 
     #--- DIRECTORIES ---#
     potential_path = os.path.join(POTENTIAL_DIR, POTENTIAL_FILE)
