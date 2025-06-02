@@ -1,19 +1,12 @@
-# Ignore datafiles and processed dumps
-01_input_files/straight_edge_dislo.lmp
-
-**/min_dump/
-**/min_input/
-
+# tmp
 06_jog_stability/
 07_dynamics_analysis/
 
-*_files/
+# Ignore datafiles and processed dumps
+000_output_files/
 
 # Ignore all log.lammps files
 *.lammps
-
-# Ignore other stuff
-selected_ids.txt
 
 # Ignore PyCaches
 __pycache__/
