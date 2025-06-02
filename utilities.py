@@ -19,8 +19,6 @@ def set_path(path=None):
     # Uncomment below to debug the working directory being set
     # print(f"[DEBUG] Working directory set to: {abs_path}")
 
-
-
 def del_file(filepath):
     """
     Delete a file if it exists.
