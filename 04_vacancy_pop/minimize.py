@@ -8,7 +8,10 @@ from utilities import set_path, clear_dir
 
 # --------------------------- CONFIG ---------------------------#
 
-MASTER_DATA_DIR = '../000_output_files'
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..'))
+
+MASTER_DATA_DIR = '000_output_files'
 
 INPUT_DIR = '02_minimize_dislo/min_input'
 INPUT_FILE = 'straight_edge_dislo.lmp'
@@ -21,7 +24,7 @@ CLEAR = True
 MULTIPLE = False
 ATOMS_TO_DELETE = 10 # Takes a list of integer values which determine the number of atoms it will delete.
 
-POTENTIAL_DIR = '../00_potentials'
+POTENTIAL_DIR = '00_potentials'
 POTENTIAL_FILE = 'malerba.fs'
 
 DISLO_CORE_RADIUS = 5
@@ -39,7 +42,7 @@ def main(atoms_to_delete):
     rank = comm.Get_rank()
     size = comm.Get_size()
 
-    set_path()
+    set_path(PROJECT_ROOT)
 
     if rank == 0:
         os.makedirs(MASTER_DATA_DIR, exist_ok=True)
