@@ -9,9 +9,12 @@ from matscipy.dislocation import BCCEdge111Dislocation
 
 from ase.io import write
 
-from utilities import set_path, del_file
+from utilities import set_path, clear_dir
 
 # --------------------------- CONFIG ---------------------------#
+
+OUTPUT_MASTER_DIR = '../000_output_files'
+OUTPUT_DIR = '01_input_files'
 
 OUTPUT_FILE = 'straight_edge_dislo.lmp'
 
@@ -26,10 +29,15 @@ DISLO_LEN = 10 # Length of the dislocation (number of planes)
 def main():
 
     set_path() # Sets the path to the location of the current script
-    del_file(OUTPUT_FILE) # Deletes any previous input file
 
     #--- DIRECTORIES ---#
     potential_path = os.path.join(POTENTIAL_DIR, POTENTIAL_FILE)
+
+    os.makedirs(OUTPUT_MASTER_DIR, exist_ok=True)
+    os.makedirs(os.path.join(OUTPUT_MASTER_DIR, OUTPUT_DIR), exist_ok=True)
+    clear_dir(os.path.join(OUTPUT_MASTER_DIR, OUTPUT_DIR))
+
+    output_path = os.path.join(OUTPUT_MASTER_DIR, OUTPUT_DIR, OUTPUT_FILE)
 
     #--- MATSCIPY ---#
 
@@ -45,7 +53,7 @@ def main():
 
     print(f"Number of atoms: {len(edge_dislo_long)}") # Find the number of atoms in the sim
 
-    write(OUTPUT_FILE, edge_dislo_long, format="lammps-data", specorder=['Fe']) # Write the file out to lammps input file
+    write(output_path, edge_dislo_long, format="lammps-data", specorder=['Fe']) # Write the file out to lammps input file
 
     return None
 
