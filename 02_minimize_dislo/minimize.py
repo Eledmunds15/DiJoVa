@@ -7,7 +7,7 @@ from utilities import set_path, clear_dir
 
 # --------------------------- CONFIG ---------------------------#
 
-DATA_MASTER_DIR = '../000_output_files'
+MASTER_DATA_DIR = '../000_output_files'
 
 INPUT_DIR = '01_input_files'
 INPUT_FILE = 'straight_edge_dislo.lmp'
@@ -36,11 +36,11 @@ def main():
     set_path()
 
     if rank == 0:
-        os.makedirs(DATA_MASTER_DIR, exist_ok=True)
-        os.makedirs(os.path.join(DATA_MASTER_DIR, MODULE_DIR), exist_ok=True)
+        os.makedirs(MASTER_DATA_DIR, exist_ok=True)
+        os.makedirs(os.path.join(MASTER_DATA_DIR, MODULE_DIR), exist_ok=True)
 
-        dump_dir = os.path.join(DATA_MASTER_DIR, MODULE_DIR, DUMP_DIR)
-        output_dir = os.path.join(DATA_MASTER_DIR, MODULE_DIR, OUTPUT_DIR)
+        dump_dir = os.path.join(MASTER_DATA_DIR, MODULE_DIR, DUMP_DIR)
+        output_dir = os.path.join(MASTER_DATA_DIR, MODULE_DIR, OUTPUT_DIR)
 
         os.makedirs(dump_dir, exist_ok=True)
         os.makedirs(output_dir, exist_ok=True)
@@ -48,7 +48,7 @@ def main():
         clear_dir(dump_dir)
         clear_dir(output_dir)
 
-        input_filepath = os.path.join(DATA_MASTER_DIR, INPUT_DIR, INPUT_FILE)
+        input_filepath = os.path.join(MASTER_DATA_DIR, INPUT_DIR, INPUT_FILE)
 
         output_file = 'straight_edge_dislo.lmp'
         dump_file = 'straight_edge_dislo_dump'
@@ -79,7 +79,7 @@ def main():
     lmp = lammps()
     L = PyLammps(ptr=lmp)
 
-    L.log(os.path.join(DATA_MASTER_DIR, MODULE_DIR, 'log.lammps'))
+    L.log(os.path.join(MASTER_DATA_DIR, MODULE_DIR, 'log.lammps'))
 
     L.units('metal') # Set units style
     L.atom_style('atomic') # Set atom style
