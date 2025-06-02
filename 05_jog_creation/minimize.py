@@ -7,7 +7,10 @@ from utilities import set_path, clear_dir
 
 # --------------------------- CONFIG ---------------------------#
 
-MASTER_DATA_DIR = '../000_output_files'
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..'))
+
+MASTER_DATA_DIR = '000_output_files'
 MODULE_DIR = '05_jog_creation'
 DUMP_DIR = 'min_dump'
 OUTPUT_DIR = 'min_input'
@@ -22,11 +25,11 @@ CLEAR = True
 MULTIPLE = False
 ATOMS_TO_DELETE = 1 # Takes a list of integer values which determine the number of atoms it will delete.
 
-POTENTIAL_DIR = '../00_potentials'
+POTENTIAL_DIR = '00_potentials'
 POTENTIAL_FILE = 'malerba.fs'
 
-ENERGY_TOL = 1e-9
-FORCE_TOL = 1e-10
+ENERGY_TOL = 1e-6
+FORCE_TOL = 1e-8
 
 # --------------------------- MINIMIZATION ---------------------------#
 
@@ -37,7 +40,7 @@ def main(atoms_to_delete):
     rank = comm.Get_rank()
     size = comm.Get_size()
 
-    set_path()
+    set_path(PROJECT_ROOT)
 
     if rank == 0:
         os.makedirs(MASTER_DATA_DIR, exist_ok=True)
