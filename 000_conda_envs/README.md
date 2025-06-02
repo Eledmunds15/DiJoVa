@@ -2,7 +2,7 @@
 
 This project includes several Conda environment files tailored for different purposes:
 
-- **01:** `mol_dynamics_lmp.yml` — Environment for input generation, lammps simulations, and post-processing with Ovito and other python packages
+- **01:** ...
 
 ## Creating Conda Environments
 

@@ -19,11 +19,11 @@ OUTPUT_DIR = 'min_input'
 POTENTIAL_DIR = '../00_potentials'
 POTENTIAL_FILE = 'malerba.fs'
 
-DISLO_CORE_RADIUS = 25
-DISLO_OUTER_RADIUS = 26
+DISLO_CORE_RADIUS = 5
+DISLO_OUTER_RADIUS = 6
 
-ENERGY_TOL = 1e-9
-FORCE_TOL = 1e-10
+ENERGY_TOL = 1e-6
+FORCE_TOL = 1e-8
 
 # --------------------------- MINIMIZATION ---------------------------#
 
