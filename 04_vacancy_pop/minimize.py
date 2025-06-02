@@ -82,7 +82,7 @@ def main(atoms_to_delete):
     lmp = lammps()
     L = PyLammps(ptr=lmp)
 
-    L.log(os.path.join(MASTER_DATA_DIR, MODULE_DIR, 'log.lammps'))
+    L.log(os.path.join(MASTER_DATA_DIR, MODULE_DIR, f'log_{atoms_to_delete}.lammps'))
 
     L.units('metal') # Set units style
     L.atom_style('atomic') # Set atom style
