@@ -13,7 +13,7 @@ from utilities import set_path, clear_dir
 
 # --------------------------- CONFIG ---------------------------#
 
-DATA_MASTER_DIR = '../000_output_files'
+MASTER_DATA_DIR = '../000_output_files'
 
 MODULE_DIR = '01_input_files'
 
@@ -34,11 +34,11 @@ def main():
     #--- DIRECTORIES ---#
     potential_path = os.path.join(POTENTIAL_DIR, POTENTIAL_FILE)
 
-    os.makedirs(DATA_MASTER_DIR, exist_ok=True)
-    os.makedirs(os.path.join(DATA_MASTER_DIR, MODULE_DIR), exist_ok=True)
-    clear_dir(os.path.join(DATA_MASTER_DIR, MODULE_DIR))
+    os.makedirs(MASTER_DATA_DIR, exist_ok=True)
+    os.makedirs(os.path.join(MASTER_DATA_DIR, MODULE_DIR), exist_ok=True)
+    clear_dir(os.path.join(MASTER_DATA_DIR, MODULE_DIR))
 
-    output_path = os.path.join(DATA_MASTER_DIR, MODULE_DIR, OUTPUT_FILE)
+    output_path = os.path.join(MASTER_DATA_DIR, MODULE_DIR, OUTPUT_FILE)
 
     #--- MATSCIPY ---#
 
