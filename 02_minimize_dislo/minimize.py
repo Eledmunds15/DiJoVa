@@ -7,17 +7,20 @@ from utilities import set_path, clear_dir
 
 # --------------------------- CONFIG ---------------------------#
 
-INPUT_DIR = '../01_input_files'
+DATA_MASTER_DIR = '../000_output_files'
+
+INPUT_DIR = '01_input_files'
 INPUT_FILE = 'straight_edge_dislo.lmp'
 
+MODULE_DIR = '02_minimize_dislo'
 DUMP_DIR = 'min_dump'
 OUTPUT_DIR = 'min_input'
 
 POTENTIAL_DIR = '../00_potentials'
 POTENTIAL_FILE = 'malerba.fs'
 
-ENERGY_TOL = 1e-7
-FORCE_TOL = 1e-10
+ENERGY_TOL = 1e-6
+FORCE_TOL = 1e-8
 
 # --------------------------- MINIMIZATION ---------------------------#
 
@@ -33,25 +36,50 @@ def main():
     set_path()
 
     if rank == 0:
-        os.makedirs(DUMP_DIR, exist_ok=True)
-        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        os.makedirs(DATA_MASTER_DIR, exist_ok=True)
+        os.makedirs(os.path.join(DATA_MASTER_DIR, MODULE_DIR), exist_ok=True)
 
-        clear_dir(DUMP_DIR)
-        clear_dir(OUTPUT_DIR)
+        dump_dir = os.path.join(DATA_MASTER_DIR, MODULE_DIR, DUMP_DIR)
+        output_dir = os.path.join(DATA_MASTER_DIR, MODULE_DIR, OUTPUT_DIR)
 
-    input_filepath = os.path.join(INPUT_DIR, INPUT_FILE)
+        os.makedirs(dump_dir, exist_ok=True)
+        os.makedirs(output_dir, exist_ok=True)
 
-    output_file = 'straight_edge_dislo.lmp'
-    dump_file = 'straight_edge_dislo_dump'
+        clear_dir(dump_dir)
+        clear_dir(output_dir)
 
-    output_filepath = os.path.join(OUTPUT_DIR, output_file)
-    dump_filepath = os.path.join(DUMP_DIR, dump_file)
+        input_filepath = os.path.join(DATA_MASTER_DIR, INPUT_DIR, INPUT_FILE)
 
-    potential_path = os.path.join(POTENTIAL_DIR, POTENTIAL_FILE)
+        output_file = 'straight_edge_dislo.lmp'
+        dump_file = 'straight_edge_dislo_dump'
+
+        output_filepath = os.path.join(output_dir, output_file)
+        dump_filepath = os.path.join(dump_dir, dump_file)
+
+        potential_path = os.path.join(POTENTIAL_DIR, POTENTIAL_FILE)
+
+    else:
+        # For other ranks, initialize variables to None or empty strings
+        dump_dir = None
+        output_dir = None
+        input_filepath = None
+        output_filepath = None
+        dump_filepath = None
+        potential_path = None
+
+    # Now broadcast all variables from rank 0 to all ranks
+    dump_dir = comm.bcast(dump_dir, root=0)
+    output_dir = comm.bcast(output_dir, root=0)
+    input_filepath = comm.bcast(input_filepath, root=0)
+    output_filepath = comm.bcast(output_filepath, root=0)
+    dump_filepath = comm.bcast(dump_filepath, root=0)
+    potential_path = comm.bcast(potential_path, root=0)
 
     #--- LAMMPS SCRIPT ---#
     lmp = lammps()
     L = PyLammps(ptr=lmp)
+
+    L.log(os.path.join(DATA_MASTER_DIR, MODULE_DIR, 'log.lammps'))
 
     L.units('metal') # Set units style
     L.atom_style('atomic') # Set atom style
