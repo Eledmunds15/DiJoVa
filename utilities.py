@@ -3,18 +3,22 @@ import sys
 import re
 import shutil
 
-def set_path():
+def set_path(path=None):
     """
-    Set the current working directory to the directory of the running script.
+    Set the current working directory.
+
+    If a path is provided, set the working directory to that path.
+    If no path is provided, set it to the directory of the running script.
+    """
+    if path:
+        abs_path = os.path.abspath(path)
+    else:
+        abs_path = os.path.dirname(os.path.abspath(sys.argv[0]))
     
-    This is useful when you want to ensure that all relative file operations
-    happen with respect to the script's location, not the current shell directory.
-    """
-    script_path = os.path.abspath(sys.argv[0])
-    script_dir = os.path.dirname(script_path)
-    os.chdir(script_dir)
+    os.chdir(abs_path)
     # Uncomment below to debug the working directory being set
-    # print(f"[DEBUG] Working directory set to: {script_dir}")
+    # print(f"[DEBUG] Working directory set to: {abs_path}")
+
 
 
 def del_file(filepath):
