@@ -7,7 +7,10 @@ from utilities import set_path, clear_dir
 
 # --------------------------- CONFIG ---------------------------#
 
-MASTER_DATA_DIR = '../000_output_files'
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..'))
+
+MASTER_DATA_DIR = '000_output_files'
 
 INPUT_DIR = '01_input_files'
 INPUT_FILE = 'straight_edge_dislo.lmp'
@@ -16,7 +19,7 @@ MODULE_DIR = '02_minimize_dislo'
 DUMP_DIR = 'min_dump'
 OUTPUT_DIR = 'min_input'
 
-POTENTIAL_DIR = '../00_potentials'
+POTENTIAL_DIR = '00_potentials'
 POTENTIAL_FILE = 'malerba.fs'
 
 ENERGY_TOL = 1e-6
@@ -33,7 +36,7 @@ def main():
 
     #--- CREATE AND SET DIRECTORIES ---#
 
-    set_path()
+    set_path(PROJECT_ROOT)
 
     if rank == 0:
         os.makedirs(MASTER_DATA_DIR, exist_ok=True)
